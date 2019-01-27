@@ -37,6 +37,8 @@ $finalstring = "[\n";
 $finalstring .= getfiles("php");
 $finalstring .= ",\n";
 $finalstring .= getfiles("html");
+$finalstring .= ",\n";
+$finalstring .= getfiles("json");
 
 $finalstring .= "\n]";
 
