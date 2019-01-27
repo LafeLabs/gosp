@@ -10,7 +10,7 @@ PUBLIC DOMAIN, NO COPYRIGHTS, NO PATENTS.
 <META NAME="robots" CONTENT="noindex,nofollow">
 </head>
 <body>
-<a href = "siteeditor.php" style = "font-family:helvetica;position:absolute;right:0px;top:0px">EDIT</a>
+<a href = "siteeditor.php" style = "font-family:helvetica;position:absolute;right:0px;top:0px;z-index:2">EDIT</a>
 <?php
 
     echo file_get_contents("html/index.txt");

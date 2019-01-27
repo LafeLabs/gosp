@@ -1,13 +1,245 @@
-<h1>Header</h1>
+<div id = "page">
+    <table id = "toptable">
+        <tr>
+            <td>
+                <a href = "siteeditor.php">EDIT</a>
+            </td>
+            <td>
+                <div class = "button" id = "gobutton"></div>
+            </td>
+        </tr>
+    </table>
 
-<p>
-    Paragraph with <em>emphasis</em> on a word.  
-</p>
+    <table id = "frametimetable">
+        <tr>
+            <td>frametime:</td>
+            <td><input id = "frametimeinput"/></td>
+        </tr>
+    </table>
+    <textarea id = "textinput"></textarea>
+    <div id = "programbox">
+        <div id = "enablebox" class= "subbox"></div>
+        <div id = "bytebox" class= "subbox"></div>
+        <div id = "bitbox" class= "subbox"></div>
+        <div id = "databox" class= "subbox"></div>
+    </div>
+</div>
 
-<a id = "randomlink" href = "http://www.wikipedia.org">link to wikipedia</a>
 
+<script>
+
+myString = "UA~";
+
+frametime = 200;
+document.getElementById("frametimeinput").value = frametime.toString();
+document.getElementById("textinput").value = myString;
+
+numbytes = myString.length;
+bitstring = string2bits(myString);
+
+document.getElementById("gobutton").onclick = function(){
+
+    frametime = parseInt(document.getElementById("frametimeinput").value);
+    numbytes = document.getElementById("textinput").value.length;
+    bitstring = string2bits(document.getElementById("textinput").value);
+
+    id = setInterval(frame, frametime);
+    bitindex = 0;
+    byteindex = 0;
+    frameindex = 0;
+    function frame() {
+        if(frameindex == numbytes*14) {
+            document.getElementById("enablebox").style.backgroundColor = "white";            
+            document.getElementById("bytebox").style.backgroundColor = "white";
+            document.getElementById("bitbox").style.backgroundColor = "white";
+            document.getElementById("databox").style.backgroundColor = "white";
+            clearInterval(id);
+        }
+        else{
+            document.getElementById("enablebox").style.backgroundColor = "black";
+            if(frameindex%14==0){
+                document.getElementById("bytebox").style.backgroundColor = "white";
+            }
+            else{
+                document.getElementById("bytebox").style.backgroundColor = "black";
+            }
+            if(frameindex%2==1){
+                document.getElementById("bitbox").style.backgroundColor = "black";
+                if(bitstring.charAt(bitindex) == 1){
+                    document.getElementById("databox").style.backgroundColor = "black";
+                }
+                else{
+                    document.getElementById("databox").style.backgroundColor = "white";
+                }
+                
+                bitindex++;
+            }
+            else{
+                document.getElementById("bitbox").style.backgroundColor = "white";
+                document.getElementById("databox").style.backgroundColor = "white";
+            }
+            frameindex++;
+        }
+    }
+}
+
+
+function string2byteCode(localString){
+    var localByteCode = "";
+    for(var stringIndex = 0;stringIndex < localString.length;stringIndex++){
+        var tempCharCode = localString.charCodeAt(stringIndex);
+        if(tempCharCode != 0){
+            localByteCode += "0";
+            localByteCode += tempCharCode.toString(8);
+            localByteCode += ",";
+        }
+    }
+    return localByteCode;
+}
+        
+function byteCode2string(localByteCode){
+    var localString = "";
+    var stringArray = localByteCode.split(",");
+    for(var index = 0;index < stringArray.length;index++){
+        var myCharCode = String.fromCharCode(parseInt(stringArray[index],8));
+        if(parseInt(stringArray[index],8) >= 040 && parseInt(stringArray[index],8) < 0177 ){
+            localString += myCharCode;
+        }
+        if(parseInt(stringArray[index],8) == 012){//newline
+            localString += myCharCode;
+        }
+        if(parseInt(stringArray[index],8) == 011){//vertical tab
+            localString += myCharCode;
+        }		
+        if(parseInt(stringArray[index],8) >= 0400 && parseInt(stringArray[index],8) <= 0777){
+            if(currentTable[parseInt(stringArray[index],8)].length > 0){
+                localString += byteCode2string(currentTable[parseInt(stringArray[index],8)]);
+            }
+        }		
+        
+    }
+    return localString;
+}
+
+
+function string2gosp(localstring){
+    var localbytecode = string2byteCode(localstring);
+    var byteArray = localbytecode.split(",");
+    var gospglyph = "";
+    for(var index = 0;index < byteArray.length;index++){
+        gospglyph += "0223,";
+        for(var bitindex = 0;bitindex < 7;bitindex++){
+            if((byteArray[index]>>bitindex) & 1 == 1){
+                gospglyph += "0221,";
+            }
+            else{
+                gospglyph += "0222,";
+            }
+        }
+    }
+    return gospglyph;
+}
+
+function string2bits(localstring){
+    var localbytecode = string2byteCode(localstring);
+    var byteArray = localbytecode.split(",");
+    var bits = "";
+    for(var index = 0;index < byteArray.length - 1;index++){
+        var asciinumber =  parseInt(byteArray[index],8);
+        for(var bitindex = 6;bitindex >= 0;bitindex--){
+            if((asciinumber>>bitindex) & 1 == 1){
+                bits += "1";
+            }
+            else{
+                bits += "0";
+            }
+
+        }
+    
+    }
+    return bits;
+}
+
+  
+
+</script>
 <style>
-    #randomlink{
-        display:block;
+    #toptable{
+        position:absolute;
+        top:0px;
+        left:0px;
+    }
+    #toptable img{
+        width:60px;
+    }
+    .button{
+        cursor:pointer;
+        width:30px;
+        height:30px;
+        border-radius:15px;
+        border:solid;
+        border-width:1px;
+        background-color:green;
+    }
+    .button:hover{
+        border:solid;
+        border-width:3px;
+    }
+    .button:active{
+        border-color:yellow;
+        border:solid;
+        border-width:5px;
+    }
+    #page{
+        position:absolute;
+        left:0px;
+        right:0px;
+        top:0px;
+        bottom:0px;
+    }
+    #gobutton{
+        background-color:green;
+    }
+    #stopbutton{
+        background-color:red;
+    }
+    #programbox{
+        position:absolute;
+        left:10px;
+        bottom:10px;
+        border:solid;
+        height:540px;
+        width:300px;
+        overflow:hidden;
+    }
+    .subbox{
+        position:absolute;
+        width:100%;
+        height:25%;
+        left:0px;
+    }
+    #enablebox{
+        top:0px;
+    }
+    #bytebox{
+        top:25%;
+    }
+    #bitbox{
+        top:50%;
+    }
+    #databox{
+        top:75%;
+    }
+    #textinput{
+        position:absolute;
+        right:0px;
+        top:2em;
+        width:200px;
+        height:200px;
+    }
+    #frametimetable{
+        position:absolute;
+        left:0px;
+        top:80px;
     }
 </style>
