@@ -1,3 +1,9 @@
+/*
+ * this code does one thing: convert a string of bits to asciia and put that down the line.  it is
+ * just a demo of the concept, a snippet which can be used in many contexts  Bytes are 7 bits.
+ * 
+ */
+
 
 String bitstring = "10000011000010100001111111101010101";
 String stringout = "";

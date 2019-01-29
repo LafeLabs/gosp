@@ -2,9 +2,6 @@
     <table id = "toptable">
         <tr>
             <td>
-                <a href = "siteeditor.php">EDIT</a>
-            </td>
-            <td>
                 <div class = "button" id = "gobutton"></div>
             </td>
         </tr>
@@ -28,9 +25,9 @@
 
 <script>
 
-myString = "UA~";
+myString = "A";
 
-frametime = 200;
+frametime = 500;
 document.getElementById("frametimeinput").value = frametime.toString();
 document.getElementById("textinput").value = myString;
 
@@ -48,22 +45,31 @@ document.getElementById("gobutton").onclick = function(){
     byteindex = 0;
     frameindex = 0;
     function frame() {
-        if(frameindex == numbytes*14) {
-            document.getElementById("enablebox").style.backgroundColor = "white";            
-            document.getElementById("bytebox").style.backgroundColor = "white";
-            document.getElementById("bitbox").style.backgroundColor = "white";
-            document.getElementById("databox").style.backgroundColor = "white";
-            clearInterval(id);
+        if(frameindex >= numbytes*16 + 1) {
+            if(frameindex == numbytes*16 + 1){
+                document.getElementById("enablebox").style.backgroundColor = "black";            
+                document.getElementById("bytebox").style.backgroundColor = "white";
+                document.getElementById("bitbox").style.backgroundColor = "white";
+                document.getElementById("databox").style.backgroundColor = "white";
+                frameindex++;
+            }
+            else{
+                document.getElementById("enablebox").style.backgroundColor = "white";            
+                document.getElementById("bytebox").style.backgroundColor = "white";
+                document.getElementById("bitbox").style.backgroundColor = "white";
+                document.getElementById("databox").style.backgroundColor = "white";
+                clearInterval(id);
+            }
         }
         else{
             document.getElementById("enablebox").style.backgroundColor = "black";
-            if(frameindex%14==0){
+            if(frameindex%16==0){
                 document.getElementById("bytebox").style.backgroundColor = "white";
             }
             else{
                 document.getElementById("bytebox").style.backgroundColor = "black";
             }
-            if(frameindex%2==1){
+            if(frameindex%2 == 0 && frameindex%16 > 0){
                 document.getElementById("bitbox").style.backgroundColor = "black";
                 if(bitstring.charAt(bitindex) == 1){
                     document.getElementById("databox").style.backgroundColor = "black";
@@ -71,7 +77,6 @@ document.getElementById("gobutton").onclick = function(){
                 else{
                     document.getElementById("databox").style.backgroundColor = "white";
                 }
-                
                 bitindex++;
             }
             else{

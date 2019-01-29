@@ -13,10 +13,10 @@ String bitstring = "";
 
 void setup() {
   Serial.begin(115200);
-  enablepin = analogRead(A2);  
-  bytepin = analogRead(A3);  
-  bitpin = analogRead(A4);  
-  datapin = analogRead(A5);  
+  enablepin = analogRead(A2);  //top rectangle in the browser
+  bytepin = analogRead(A3);  //does nothing in this version of code, is for verification
+  bitpin = analogRead(A4);  // this is essentially a clock
+  datapin = analogRead(A5); //bottom rectangle in the browser 
 
 }
 
